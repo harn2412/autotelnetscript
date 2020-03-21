@@ -7,17 +7,19 @@ import socket
 import logging
 
 
-def run_cmd(telnet, cmd, end, success, timeout=1):
+def run_cmd(
+    telnet: Telnet, cmd: str, end: str, success: str, timeout: int or float = 1
+):
     """chay lenh, kiem tra va tra ve ket qua
     telnet : Telnet Obj
-    command : lenh can thuc hien (str)
-    end_point : diem dung khi dung read_until (str)
-    check_point : dieu kien kiem tra xem lenh co thanh cong khong (str)
-    timeout : thoi gian cho doc du lieu (int)
+    cmd : lenh can thuc hien (str)
+    end : noi dung hien ra khi lenh da duoc thuc hien (str)
+    success : noi dung thu duoc khi lenh thuc hien thanh cong khong (str)
+    timeout : thoi gian cho doc du lieu (int or float)
     Ket qua tra ve se la dang tuple:
-        Neu end_point == "" (chuoi rong): True + b""
-        Neu thanh cong: True + noi dung doc duoc (byte)
-        Neu that bai: False + noi dung doc duoc (byte)"""
+        Neu end == "" : (True, b"")
+        Neu thanh cong: (True, content: byte)
+        Neu that bai: (False, content: byte)"""
 
     # Thuc thi lenh
     telnet.write(cmd.encode("ascii") + b"\n")
@@ -46,8 +48,7 @@ def main():
     os.path.exists(os.path.join(cwd, cmd_dir, hosts_f))
     # File chua du lieu cac cau lenh can thuc hien
     print("Ten tap tin chua cac lenh muon su dung, Enter de dung mac dinh ...")
-    commands_f = input(
-        "File name (Mac dinh: commands.json): ") or "commands.json"
+    commands_f = input("File name (Mac dinh: commands.json): ") or "commands.json"
     os.path.exists(os.path.join(cwd, host_dir, commands_f))
 
     # Port telnet de ket noi den
@@ -57,10 +58,12 @@ def main():
     print("Thoi gian cho thiet bi ket noi, Enter de dung mac dinh ...")
     telnet_timeout = int(input("Timeout (Mac dinh: 15s) :") or 15)
     # Thoi gian cho giua cac giai doan quan trong
-    print("Thoi gian cho giua cac qua trinh quan trong\n"
-          "\t- VD1: Dang nhap xong thi cho de chay lenh dau tien\n"
-          "\t- VD2: Lenh cuoi cung truoc khi chuyen qua thiet bi khac\n"
-          "Mac dinh la 2s")
+    print(
+        "Thoi gian cho giua cac qua trinh quan trong\n"
+        "\t- VD1: Dang nhap xong thi cho de chay lenh dau tien\n"
+        "\t- VD2: Lenh cuoi cung truoc khi chuyen qua thiet bi khac\n"
+        "Mac dinh la 2s"
+    )
     delay = int(input("Delay: ") or "2")
 
     # Lay danh sach cac IP thiet bi
